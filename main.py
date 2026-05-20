@@ -69,6 +69,7 @@ def kmeans(dane, etykiety, k, max_iter=100):
             print(f"\nGrupa {i + 1}: Pusta")
             continue
 
+
         zliczenia = Counter(etykiety_w_grupie)
         print(f"\nGrupa {i + 1} (Liczba elementów: {liczba_elementow}):")
 
