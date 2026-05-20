@@ -11,9 +11,7 @@ def wczytaj_dane(nazwa_pliku):
             if not linia:  # Pomiń puste linie
                 continue
             elementy = linia.split(',')
-            # Pierwsze cztery kolumny to atrybuty liczbowe (cechy)
             cechy = [float(x) for x in elementy[:-1]]
-            # Ostatnia kolumna to ukryta klasa decyzyjna
             klasa = elementy[-1]
 
             dane.append(cechy)
@@ -22,15 +20,12 @@ def wczytaj_dane(nazwa_pliku):
 
 
 def kwadrat_odleglosci(p1, p2):
-    # Suma kwadratów różnic między współrzędnymi.
-    # To ta wartość ściśle maleje w klasycznym k-means po każdej iteracji.
     return sum((a - b) ** 2 for a, b in zip(p1, p2))
 
 
 def kmeans(dane, etykiety, k, max_iter=100):
-    # Inicjalizacja: losowy wybór k punktów początkowych jako centroidy
-    random.seed(0)  # Ustawienie ziarna losowości dla powtarzalności wyników
-    indeksy = random.sample(range(len(dane)), k)
+    random.seed(0) #
+    indeksy = random.sample(range(len(dane)), k) # k indeksow probek
     centroidy = [dane[i] for i in indeksy]
 
     poprzednie_przypisania = None
@@ -40,7 +35,7 @@ def kmeans(dane, etykiety, k, max_iter=100):
         przypisania = [[] for _ in range(k)]
         suma_odleglosci = 0.0
 
-        # Etap 1: Przypisywanie każdego przykładu do najbliższego centroidu
+        # Przypisywanie każdego przykładu do najbliższego centroidu
         for i, punkt in enumerate(dane):
             odleglosci = [kwadrat_odleglosci(punkt, c) for c in centroidy]
             min_odleglosc = min(odleglosci)
@@ -52,19 +47,19 @@ def kmeans(dane, etykiety, k, max_iter=100):
 
         print(f"Iteracja {iteracja}: {suma_odleglosci:.2f}")
 
-        # Warunek stopu: algorytm kończy działanie, gdy punkty przestaną zmieniać grupy
+        # algorytm kończy działanie, gdy punkty przestaną zmieniać grupy
         if poprzednie_przypisania is not None and przypisania == poprzednie_przypisania:
             print("Algorytm zbiegł się - przypisania przestały się zmieniać.\n")
             break
 
         poprzednie_przypisania = przypisania
 
-        # Etap 2: Aktualizacja pozycji centroidów (średnia z przypisanych punktów)
+        # Aktualizacja pozycji centroidów (średnia z przypisanych punktów)
         for i in range(k):
             if grupy[i]:  # Sprawdzamy czy grupa nie jest pusta
                 centroidy[i] = [sum(wymiar) / len(grupy[i]) for wymiar in zip(*grupy[i])]
 
-    # Etap 3: Ewaluacja grup (czystość, składy grup na podstawie odciętych na początku etykiet)
+    # EEwaluacja grup
     print("Składy grup i ich czystość:")
     for i in range(k):
         etykiety_w_grupie = [etykiety[idx] for idx in poprzednie_przypisania[i]]
@@ -84,18 +79,12 @@ def kmeans(dane, etykiety, k, max_iter=100):
 
 
 if __name__ == "__main__":
-    # Zakładamy, że plik iris.data znajduje się w tym samym folderze co skrypt
     plik_danych = 'iris.data'
 
-    try:
-        dane, etykiety = wczytaj_dane(plik_danych)
+    dane, etykiety = wczytaj_dane(plik_danych)
 
-        # Odkomentuj poniższą linię, jeśli program ma prosić użytkownika o wpisanie liczby 'k'
-        # k = int(input("Wybierz liczbę grup (k): "))
-        k = 3  # Ustawione domyślnie na 3, czyli rzeczywistą liczbę gatunków irysów
+    # k = int(input("Wybierz liczbę grup (k): "))
+    k = 3
 
-        print(f"Uruchamianie algorytmu k-means dla k = {k}\n")
-        kmeans(dane, etykiety, k)
-
-    except FileNotFoundError:
-        print(f"Błąd: Nie znaleziono pliku '{plik_danych}'. Upewnij się, że jest w tym samym folderze.")
+    print(f"Uruchamianie algorytmu k-means dla k = {k}\n")
+    kmeans(dane, etykiety, k)
