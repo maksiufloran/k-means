@@ -8,7 +8,7 @@ def wczytaj_dane(nazwa_pliku):
     with open(nazwa_pliku, 'r') as plik:
         for linia in plik:
             linia = linia.strip()
-            if not linia:  # Pomiń puste linie
+            if not linia:
                 continue
             elementy = linia.split(',')
             cechy = [float(x) for x in elementy[:-1]]
