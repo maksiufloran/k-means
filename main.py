@@ -59,7 +59,7 @@ def kmeans(dane, etykiety, k, max_iter=100):
             if grupy[i]:  # Sprawdzamy czy grupa nie jest pusta
                 centroidy[i] = [sum(wymiar) / len(grupy[i]) for wymiar in zip(*grupy[i])]
 
-    # EEwaluacja grup
+    # Ewaluacja grup
     print("Składy grup i ich czystość:")
     for i in range(k):
         etykiety_w_grupie = [etykiety[idx] for idx in poprzednie_przypisania[i]]
